@@ -31,9 +31,11 @@ fullName: string;
   gender:"male" | "female"
 }
 
+// the backend answers a failed login with 200 + { message } instead of tokens
 export type LoginResponse = {
-    accessToken: string;
-    refreshToken:string;
+    accessToken?: string;
+    refreshToken?: string;
+    message?: string;
 }
 
 export type LoginRequest = {
@@ -45,8 +47,8 @@ export type WorkoutCreate = {
      workoutType: string;
     workoutAlias: string | null;
     notes: string | null;
-    startedAt: Date | null;
-    finishedAt: Date | null;
+    startedAt: string | null; // ISO 8601 datetime
+    finishedAt: string | null; // ISO 8601 datetime
     exercises: ExerciseCreate[];
 }
 

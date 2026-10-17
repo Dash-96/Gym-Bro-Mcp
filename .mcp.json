@@ -2,7 +2,7 @@
   "mcpServers": {
     "my-server": {
       "type": "http",
-      "url": "http://localhost:3000/mcp"
+      "url": "https://gym-bro-mcp-production.up.railway.app/mcp"
     }
   }
 }

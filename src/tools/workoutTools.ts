@@ -1,5 +1,6 @@
-import { GYM_BRO_API_BASE, server } from "../server.js";
+import type { McpServer } from "@modelcontextprotocol/server";
 import { z } from "zod";
+import { GYM_BRO_API_BASE } from "../config.js";
 import { WorkoutCreate } from "../types.js";
 import { makePostRequest } from "../utils.js";
 
@@ -25,15 +26,17 @@ const workoutSchema = z.object({
   exercises: z.array(exerciseSchema).describe("the exercises performed in the workout"),
 });
 
-server.registerTool("create_workout", {
-  description: "create a new workout, passing workout object and jwt token",
-  inputSchema: z.object({
-    workout: workoutSchema.describe("the workout to create"),
-    token: z.string().min(1).describe("the jwt access token to be sent as bearer token"),
-  }),
-} , async({workout , token}) => {
-    const url = `${GYM_BRO_API_BASE}/workout/create`;
-    const data = await makePostRequest(url , workout , token);
+export function registerWorkoutTools(server: McpServer) {
+  server.registerTool("create_workout", {
+    description: "create a new workout, passing workout object and the jwt accessToken returned by login_user",
+    inputSchema: z.object({
+      workout: workoutSchema.describe("the workout to create"),
+      token: z.string().min(1).describe("the jwt access token to be sent as bearer token"),
+    }),
+  } , async({workout , token}) => {
+      const url = `${GYM_BRO_API_BASE}/workout/create`;
+      const created = await makePostRequest<unknown, WorkoutCreate>(url , workout , token);
 
-    return {content : [{type:"text" , text:"Called workout create"}]}
-});
+      return {content : [{type:"text" , text:`Workout created: ${JSON.stringify(created)}`}]}
+  });
+}
