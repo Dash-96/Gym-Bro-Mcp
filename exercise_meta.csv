@@ -1,0 +1,60 @@
+1,Barbell Bench Press,chest_bench_press_barbell,Chest
+2,Dumbbell Bench Press,chest_bench_press_dumbbell,Chest
+3,Incline Barbell Bench Press,chest_incline_bench_press_barbell,Chest
+4,Incline Dumbbell Bench Press,chest_incline_bench_press_dumbbell,Chest
+5,Decline Bench Press,chest_decline_bench_press,Chest
+8,Dumbbell Fly,chest_fly_dumbbell,Chest
+9,Cable Crossover,chest_fly_cable,Chest
+10,Machine Chest Fly (Pec Deck),chest_fly_machine,Chest
+11,Machine Chest Press,chest_press_machine,Chest
+12,Dumbbell Pullover,chest_pullover_dumbbell,Chest
+13,Conventional Deadlift,back_deadlift_conventional,Back
+14,Sumo Deadlift,back_deadlift_sumo,Back
+17,Lat Pulldown,back_lat_pulldown,Back
+18,Barbell Row,back_row_barbell,Back
+19,Single-Arm Dumbbell Row,back_row_dumbbell_single_arm,Back
+20,Seated Cable Row,back_row_cable_seated,Back
+21,T-Bar Row,back_row_tbar,Back
+22,Face Pull,back_face_pull,Back
+23,Barbell Shrug,back_shrug_barbell,Back
+24,Dumbbell Shrug,back_shrug_dumbbell,Back
+25,Back Extension,back_hyperextension,Back
+26,Barbell Back Squat,legs_squat_barbell_back,Legs
+27,Barbell Front Squat,legs_squat_barbell_front,Legs
+28,Goblet Squat,legs_squat_goblet,Legs
+29,Leg Press,legs_leg_press,Legs
+30,Dumbbell Lunge,legs_lunge_dumbbell,Legs
+31,Walking Lunge,legs_lunge_walking,Legs
+32,Bulgarian Split Squat,legs_split_squat_bulgarian,Legs
+33,Leg Extension,legs_extension_machine,Legs
+34,Seated Leg Curl,legs_curl_machine_seated,Legs
+35,Lying Leg Curl,legs_curl_machine_lying,Legs
+36,Romanian Deadlift (Barbell),legs_rdl_barbell,Legs
+37,Romanian Deadlift (Dumbbell),legs_rdl_dumbbell,Legs
+38,Barbell Hip Thrust,legs_hip_thrust_barbell,Legs
+39,Standing Calf Raise,legs_calf_raise_standing,Legs
+40,Seated Calf Raise,legs_calf_raise_seated,Legs
+41,Overhead Press (OHP),shoulders_overhead_press_barbell,Shoulders
+42,Seated Dumbbell Shoulder Press,shoulders_overhead_press_dumbbell,Shoulders
+43,Arnold Press,shoulders_arnold_press,Shoulders
+44,Dumbbell Lateral Raise,shoulders_lateral_raise_dumbbell,Shoulders
+45,Cable Lateral Raise,shoulders_lateral_raise_cable,Shoulders
+46,Dumbbell Front Raise,shoulders_front_raise_dumbbell,Shoulders
+47,Rear Delt Dumbbell Fly,shoulders_rear_delt_fly_dumbbell,Shoulders
+48,Upright Row,shoulders_upright_row,Shoulders
+49,Barbell Curl,arms_curl_barbell,Biceps
+50,Dumbbell Curl,arms_curl_dumbbell,Biceps
+51,Hammer Curl,arms_curl_hammer,Biceps
+52,Preacher Curl,arms_curl_preacher,Biceps
+53,Concentration Curl,arms_curl_concentration,Biceps
+54,Cable Bicep Curl,arms_curl_cable,Biceps
+55,Cable Tricep Pushdown,arms_extension_tricep_cable_pushdown,Triceps
+56,Overhead Dumbbell Extension,arms_extension_tricep_overhead_dumbbell,Triceps
+57,Skullcrusher,arms_skullcrusher,Triceps
+59,Dumbbell Kickback,arms_kickback_dumbbell,Triceps
+60,Close-Grip Bench Press,arms_close_grip_bench_press,Triceps
+63,Hanging Leg Raise,core_leg_raise_hanging,Core
+64,Russian Twist,core_russian_twist,Core
+65,Ab Wheel Rollout,core_ab_wheel_rollout,Core
+66,Cable Crunch,core_cable_crunch,Core
+67,Cable Woodchopper,core_woodchopper,Core
