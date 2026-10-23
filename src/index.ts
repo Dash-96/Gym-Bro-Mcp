@@ -3,6 +3,18 @@ import { createGymBroServer } from "./server.js";
 import { toNodeHandler } from "@modelcontextprotocol/node";
 import { createServer } from "node:http";
 
+const MCP_RESOURCE =
+  "https://gym-bro-mcp-production.up.railway.app/mcp";
+
+const AUTH0_ISSUER =
+  "https://dev-gym-bro.eu.auth0.com/";
+
+const METADATA_PATH =
+  "/.well-known/oauth-protected-resource/mcp";
+
+const METADATA_URL =
+  `https://gym-bro-mcp-production.up.railway.app${METADATA_PATH}`;
+
 const handler = createMcpHandler(createGymBroServer, {
   onerror: (err) => console.error("MCP handler error:", err),
 });
@@ -20,11 +32,44 @@ const httpServer = createServer((req, res) => {
     return;
   }
 
-  if (path !== "/mcp") {
-    res.writeHead(404);
-    res.end("Not Found");
-    return;
-  }
+  if (req.method === "GET" && path === METADATA_PATH) {
+  res.writeHead(200, {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+  });
+
+  return res.end(
+    JSON.stringify({
+      resource: MCP_RESOURCE,
+      authorization_servers: [AUTH0_ISSUER],
+      scopes_supported: ["gymbro:read", "gymbro:write"],
+    })
+  );
+}
+
+if (path === "/mcp") {
+  res.writeHead(401, {
+    "Content-Type": "application/json",
+    "WWW-Authenticate":
+      `Bearer resource_metadata="${METADATA_URL}", scope="gymbro:read"`,
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Expose-Headers": "WWW-Authenticate",
+  });
+
+  return res.end(
+    JSON.stringify({
+      error: "unauthorized",
+    })
+  );
+}
+
+  // if (path !== "/mcp") {
+  //   res.writeHead(404);
+  //   res.end("Not Found");
+  //   return;
+  // }
+
+
   nodeHandler(req, res);
 });
 
