@@ -29,5 +29,23 @@ export async function verifyAuth0AccessToken(token: string) {
     scopes: typeof payload.scope === "string" ? payload.scope.split(/\s+/).filter(Boolean) : [],
     expiresAt: payload.exp,
     resource: new URL(MCP_RESOURCE),
+    extra: { sub: payload.sub },
   };
+}
+
+// Auth0 only answers /userinfo for tokens issued with the `openid` scope,
+// so profile claims are optional on top of the access token's own claims
+export async function fetchAuth0UserInfo(token: string): Promise<Record<string, unknown> | null> {
+  try {
+    const response = await fetch(`${AUTH0_ISSUER}userinfo`, {
+      headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
+    });
+    if (!response.ok) {
+      return null;
+    }
+    return (await response.json()) as Record<string, unknown>;
+  } catch (err) {
+    console.error("Error fetching Auth0 userinfo: ", err);
+    return null;
+  }
 }

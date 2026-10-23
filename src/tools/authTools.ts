@@ -3,6 +3,7 @@ import type { McpServer } from "@modelcontextprotocol/server";
 import { makePostRequest } from "../utils.js";
 import { avatarImages, LoginRequest, LoginResponse, RegisterPayload, RegisterResponse } from "../types.js";
 import { GYM_BRO_API_BASE } from "../config.js";
+import { fetchAuth0UserInfo } from "../auth.js";
 
 const registerSchema = z.object({
   fullName: z.string().min(2).describe("the full name of the new user"),
@@ -54,6 +55,28 @@ export function registerAuthTools(server: McpServer) {
 
       const result = { accessToken: tokens.accessToken, refreshToken: tokens.refreshToken };
       return { content: [{ type: "text", text: `Logged in successfully as "${displayName}"\n${JSON.stringify(result)}` }] };
+    },
+  );
+
+  server.registerTool(
+    "whoami",
+    {
+      description: "get the user currently signed in to this MCP server through Auth0",
+    },
+    async (ctx) => {
+      const authInfo = ctx.http?.authInfo;
+      if (!authInfo) {
+        throw new Error("Not signed in: no Auth0 token on this request");
+      }
+
+      const user = {
+        sub: authInfo.extra?.sub,
+        clientId: authInfo.clientId,
+        scopes: authInfo.scopes,
+        expiresAt: authInfo.expiresAt ? new Date(authInfo.expiresAt * 1000).toISOString() : null,
+        profile: await fetchAuth0UserInfo(authInfo.token),
+      };
+      return { content: [{ type: "text", text: `Signed in as "${user.sub}"\n${JSON.stringify(user)}` }] };
     },
   );
 
