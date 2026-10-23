@@ -2,6 +2,8 @@ import { createMcpHandler } from "@modelcontextprotocol/server";
 import { createGymBroServer } from "./server.js";
 import { toNodeHandler } from "@modelcontextprotocol/node";
 import { createServer } from "node:http";
+import { verifyAuth0AccessToken } from "./auth.js"
+import { AuthenticatedRequest } from "./types.js";
 
 const MCP_RESOURCE =
   "https://gym-bro-mcp-production.up.railway.app/mcp";
@@ -23,7 +25,8 @@ const nodeHandler = toNodeHandler(handler, {
   onerror: (err) => console.error("MCP node adapter error:", err),
 });
 
-const httpServer = createServer((req, res) => {
+const httpServer = createServer(async (req, res) => {
+  const authReq = req as AuthenticatedRequest;
   const path = new URL(req.url ?? "/", "http://localhost").pathname;
 
   if (path === "/health") {
@@ -48,29 +51,34 @@ const httpServer = createServer((req, res) => {
 }
 
 if (path === "/mcp") {
-  res.writeHead(401, {
-    "Content-Type": "application/json",
-    "WWW-Authenticate":
-      `Bearer resource_metadata="${METADATA_URL}", scope="gymbro:read"`,
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Expose-Headers": "WWW-Authenticate",
-  });
+  const authorization = req.headers.authorization ?? "";
+  const match = /^Bearer\s+(\S+)$/i.exec(authorization);
 
-  return res.end(
-    JSON.stringify({
-      error: "unauthorized",
-    })
-  );
+  const denyAccess = () => {
+    res.writeHead(401, {
+      "Content-Type": "application/json",
+      "WWW-Authenticate":
+        'Bearer resource_metadata="https://gym-bro-mcp-production.up.railway.app/.well-known/oauth-protected-resource/mcp", error="invalid_token"',
+      "Access-Control-Expose-Headers": "WWW-Authenticate",
+    });
+
+    res.end(JSON.stringify({ error: "invalid_token" }));
+  };
+
+  if (!match) {
+    return denyAccess();
+  }
+
+  try {
+    authReq.auth  = await verifyAuth0AccessToken(match[1]);
+  } catch (error) {
+    console.error("Token verification failed");
+    return denyAccess();
+  }
+
+  // Only authenticated requests reach your MCP handler.
+  return nodeHandler(req, res);
 }
-
-  // if (path !== "/mcp") {
-  //   res.writeHead(404);
-  //   res.end("Not Found");
-  //   return;
-  // }
-
-
-  nodeHandler(req, res);
 });
 
 const PORT = Number(process.env.PORT) || 3000;
@@ -78,3 +86,5 @@ const PORT = Number(process.env.PORT) || 3000;
 httpServer.listen(PORT, "0.0.0.0", () => {
   console.log(`MCP server listening on port ${PORT}`);
 });
+
+
